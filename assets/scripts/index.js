@@ -1,26 +1,43 @@
-function submitForm(event) {
+const isValidEmail = (email) => {
+  const validEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return validEmailRegex.test(email);
+};
+
+const showErrorMessage = (message, inputElement) => {
+  const invalidMessage = document.querySelector(".email__validation__message");
+  invalidMessage.textContent = message;
+  invalidMessage.classList.remove("hidden");
+  inputElement.classList.add("invalid__input");
+};
+
+const submitForm = (event) => {
   event.preventDefault();
 
   const newsletterCard = document.querySelector(".newsletter__card");
   const thankYouCard = document.querySelector(".thank__you__card");
-  const invalidMessage = document.querySelector(".email__validation__message");
-  const emailPlaceholder = document.querySelector(".email__placeholder");
   const emailInput = document.querySelector("#email");
   const email = emailInput.value.trim();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (email === "") {
-    invalidMessage.textContent = "There's no email!";
-    invalidMessage.classList.remove("hidden");
-    emailInput.classList.add("invalid__input");
-  } else if (!emailRegex.test(email)) {
-    invalidMessage.textContent = "Invalid email!";
-    invalidMessage.classList.remove("hidden");
-    emailInput.classList.add("invalid__input");
+    showErrorMessage("There's no email!", emailInput);
+  } else if (!isValidEmail(email)) {
+    showErrorMessage("Invalid email!", emailInput);
   } else {
     newsletterCard.classList.add("hidden");
-    emailPlaceholder.textContent = email;
+    document.querySelector(".email__placeholder").textContent = email;
     thankYouCard.classList.remove("hidden");
   }
-}
+};
 
+const dismiss = () => {
+  const newsletterCard = document.querySelector(".newsletter__card");
+  const thankYouCard = document.querySelector(".thank__you__card");
+  const invalidMessage = document.querySelector(".email__validation__message");
+  const emailInput = document.querySelector("#email");
+
+  thankYouCard.classList.add("hidden");
+  invalidMessage.classList.add("hidden");
+  emailInput.classList.remove("invalid__input");
+  emailInput.value = "";
+  newsletterCard.classList.remove("hidden");
+};
